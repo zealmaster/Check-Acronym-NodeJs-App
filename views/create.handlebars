@@ -1,0 +1,55 @@
+
+<br>
+<div class="container container-sm bg-outline-success shadow p-3 mb-3">
+<form method="post" action="/create" class="form-control form-control-sm">
+     <div class="form-class">
+         <label for="acronym">Acronym</label><br>
+    <input type="text" name="acronym" id="acronym" class="form-control mb-3" placeholder="Type acronym. E.g. KI" required>
+    </div>
+    <br>
+    <div>
+         <label for="subject">Subject</label><br>
+        <select id="subject" oninput="showField()" style="display: block;" name="subject" class="dropmenu" class="form-control form-control-sm mb-3" required>
+            {{#with searchResult as |search|}}
+                {{#each search}}
+                <option>{{this.subj}}</option>
+                {{/each}}
+                {{/with}}
+            <option>Others</option>
+        </select> <br><br>
+        <input type="text" id="input-el" style="display: none;" name="other" placeholder="Type the new subject">
+
+    </div>
+<br>
+    <div>
+         <label for="meaning">Meaning</label><br>
+        <textarea name="meaning" id="meaning" class="form-control mb-3"
+                  placeholder="Type the meaning. E.g. Kingsley Ijuo" required></textarea>
+    </div>
+    <br>
+    <div>
+         <label for="definition">Definition</label><br>
+        <textarea name="definition" id="definition" class=" form-control"
+                  placeholder="Define the acronym. E.g. The nickname of Kingsley Ijuo Onah"></textarea>
+    </div>
+        <br>
+
+    <input type="submit" value="Add" class="form-control-sm btn btn-primary mb-3">
+</form>
+<br>
+</div>
+
+{{!-- Javascript for the subject field --}}
+<script>
+function showField(){
+    var subjectEl = document.getElementById('subject')
+    var inputEl = document.getElementById('input-el');
+
+    if (subjectEl.value == "Others"){
+        inputEl.style.display="block";
+    }else{
+        inputEl.style.display="none";
+        inputEl.value = null
+    }
+}
+</script>

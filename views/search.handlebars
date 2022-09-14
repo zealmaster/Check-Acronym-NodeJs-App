@@ -1,0 +1,15 @@
+<div class="container">
+    <strong><h2>Search results</h2></strong>
+
+<div class="container shadow p-3 mb-5 rounded align-items-center">
+<a class="nav-item link-dark" href="#"> 
+    
+{{#with searchResult as |search|}}
+{{#each search}}
+<p>{{this.acronym}} in {{this.subj}}</p>
+{{/each}}
+{{/with}}
+
+</a><br>
+</div>
+</div>

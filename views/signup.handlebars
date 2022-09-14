@@ -1,0 +1,32 @@
+<h1>SIGN UP FORM</h1>
+<form method="POST" action="/signup" class="form-control form-control-sm">
+     <div class="form-class">
+         <label for="firstname">First name</label>
+    <input type="text" name="firstname" id="firstname" placeholder="Enter first name" required>
+    </div>
+    <br>
+    <div class="form-class">
+         <label for="lastname">Last name</label>
+    <input type="text" name="lastname" id="lastname" placeholder="Enter last name" required>
+    </div>
+    <br>
+<!--    <div class="form-class">-->
+<!--         <label for="username">Username</label>-->
+<!--    <input type="text" name="username" id="username" placeholder="Enter last username" required>-->
+<!--    </div>-->
+    <br>
+    <div>
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" placeholder="Enter email" required>
+    </div><br>
+    <div>
+      <label for="password">Password</label>
+    <input type="password" name="password" id="password" placeholder="Enter password" required>
+    </div>
+    <br>
+      <label for="password1">Confirm Password</label>
+    <input type="password" name="password1" id="password1" placeholder="Confirm password" required>
+    <br><br>
+    <div><button type="submit" value="Sign Up" class="btn btn-primary">Sign Up</button></div>
+    <a href="/login">Have account already? Login.</a>
+</form>
