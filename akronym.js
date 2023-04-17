@@ -75,20 +75,17 @@ db.query(sql, (err, result) => {
         const user = result[0];
         req.session.userId = user.id;
         req.session.loggedin = true;
-        req.session.firstname = email;
-        res.render('index', {result: result, loggedin: req.session.loggedin});
-    } else {
-        res.redirect('/login')
-    }
+        req.session.email = email;
+        res.render('index', {result: result, loggedin: req.session.userId});
+    } 
 });  
 });
 
 // Middleware 
 function isAuthenticated(req, res, next){
-    if(req.session.loggedin) next()
+    if(req.session.userId) next()
     else res.redirect('/login')
 }
-
 
 // Logout route
 app.get('/logout', isAuthenticated, (req, res) => {
@@ -102,7 +99,7 @@ app.get('/logout', isAuthenticated, (req, res) => {
 
 // Authenticated Index route
 app.get('/index', isAuthenticated, (req, res) => {
-   
+
     var sql = `SELECT subj FROM akronym`;
     db.query(sql, (err, result) => {
     if (err) throw err;
@@ -112,7 +109,6 @@ app.get('/index', isAuthenticated, (req, res) => {
     });
 });
 });
-
 // Home route
 app.get('/', (req, res) => {
     var sql = `SELECT subj FROM akronym`;
@@ -165,7 +161,7 @@ app.post('/signup', (req, res) => {
 
 
 // Create Acronym route
-app.get('/create', (req, res) => {
+app.get('/create', isAuthenticated, (req, res) => {
         var sql = 'SELECT subj from akronym';
     db.query(sql, (err, result) => {
         if (err) throw err; 
@@ -183,11 +179,11 @@ app.post('/create', isAuthenticated, (req, res) => {
     var definition =  req.body.definition;
     var other = req.body.other
     if (other==null) {
-    var sql = `INSERT INTO akronym (acronym, subj, meaning, def) VALUES 
+    var sql = `INSERT INTO akronym (acronym, subj, meaning, definition) VALUES 
     ('${acronym}', '${subject}', '${meaning}', '${definition}');`
     }
     else{
-        var sql = `INSERT INTO akronym (acronym, subj, meaning, def) VALUES 
+        var sql = `INSERT INTO akronym (acronym, subj, meaning, definition) VALUES 
     ('${acronym}', '${other}', '${meaning}', '${definition}');`
     }
     db.query(sql, (err, result) =>{
@@ -196,6 +192,31 @@ app.post('/create', isAuthenticated, (req, res) => {
             msg: 'Your acronym was submitted!'
         })
     });
+});
+
+// Show Profile
+app.get('/profile', isAuthenticated, (req, res) => {
+    var sql = `SELECT * FROM users WHERE id = ${req.session.userId}`;
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        res.render('profile', {
+            title: 'Profile page',
+            user: result
+        })
+    });
+})
+
+// Display acronym
+app.get('/acronym/:id', (req, res) => {
+    const acronymId = req.params.id;
+    var sql = `SELECT * FROM akronym WHERE id = ${acronymId}`
+    db.query(sql, (err, result) => {
+        console.log(result)
+        if (err) throw err;
+        res.render('display-acronym', {
+            title: result.acronym, acronym: result
+        });
+    })
 });
 
 app.listen(3000, () => {console.log('Server started at port', 3000);});

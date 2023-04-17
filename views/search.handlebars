@@ -1,15 +1,12 @@
 <div class="container">
     <strong><h2>Search results</h2></strong>
 
-<div class="container shadow p-3 mb-5 rounded align-items-center">
-<a class="nav-item link-dark" href="#"> 
-    
+<div class="container shadow p-3 mb-5 rounded align-items-center">  
 {{#with searchResult as |search|}}
 {{#each search}}
-<p>{{this.acronym}} in {{this.subj}}</p>
+<p><a href="/acronym/{{this.id}}"> {{this.acronym}} in {{this.subj}}</a></p>
 {{/each}}
 {{/with}}
-
-</a><br>
+<br>
 </div>
 </div>
