@@ -27,7 +27,7 @@
             <li><a class="dropdown-item" href="#">
                 {{#with searchResult as |search|}}
                 {{#each search}}
-                <li>{{this.subj}}</li>
+                <li>{{this.subject_area}}</li>
                 {{/each}}
                 {{/with}}
             </a></li>
@@ -69,10 +69,10 @@
             </a></li>
             </ul>
             <li class="nav-item">
-                <a href="/signup" class="nav-link">Signup</a>
+                <a href="/user/signup" class="nav-link">Signup</a>
             </li>
             <li class="nav-item">
-                <a href="/login" class="nav-link">Login</a>
+                <a href="/user/login" class="nav-link">Login</a>
             </li>
         {{!-- {% endif %} --}}
     {{/if}}

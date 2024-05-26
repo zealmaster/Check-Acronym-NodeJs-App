@@ -1,15 +1,14 @@
-const express = require('express');
-const session = require('express-session');
-const flash = require('connect-flash');
-var db = require('./database');
-var mysql2 = require('mysql2/promise');
-var MySQLStore = require('express-mysql-session');
+import express from 'express';
+import session from 'express-session';
+import flash from 'connect-flash';
+import mysql2 from 'mysql2/promise';
+import { db } from './database.js';
+import handlebars from 'express-handlebars'
+import MySQLStore from 'express-mysql-session';
 const app = express();
-const dotenv = require('dotenv');
+import * as dotenv from 'dotenv';
 dotenv.config()
-
-// set up express-handlebars
-const handlebars = require('express-handlebars');
+import {user} from './user.js'
 
 //Create custom helper
 const hbs = handlebars.create({
@@ -25,7 +24,6 @@ list: function(value, options){
 }
 });
 
-// Database connection
 var options = {
     host: process.env.MYSQSL_HOST,
     port: process.env.MYSQL_PORT,
@@ -38,9 +36,10 @@ var connection = mysql2.createPool(options);
 // session and session storage
 var sessionStore = new MySQLStore({}, connection);
 sessionStore.close();
+
 app.use(session({
     name: 'SESSION_ID', // cookie name stored in the web browser
-    secret: 'secret',   //helps to protect session
+    secret: process.env.SESSION_SECRET,   //helps to protect session
     store: sessionStore,
     cookie: {
         maxAge: 30 * 85400000, // 30 * (24*60*60*1000) = 30 * 86400000 => session is stored 30 days
@@ -55,48 +54,25 @@ app.use(flash());
 //Include urlencoded middleware
 app.use(express.urlencoded({extended: true}));
 app.engine('handlebars', hbs.engine);
+
 // app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
-
-// Login route
-app.get('/login', (req, res) => {
-    res.render('login',{title: "Login"});
-})
-
-app.post('/login', (req, res) => {
-    // if (req.session.loggedin){
-    //    return res.redirect('/index')
-    // }else{
-var email = req.body.email;
-var password = req.body.password;
-    //}
-var sql = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`;
-db.query(sql, (err, result) => {
-    if (err) throw err;
-    if (result.length > 0){
-        const user = result[0];
-        req.session.userId = user.id;
-        req.session.loggedin = true;
-        req.session.email = email;
-        res.render('index', {result: result, loggedin: req.session.userId});
-    } 
-});  
-});
-
 // Middleware 
 function isAuthenticated(req, res, next){
     if(req.session.userId) next()
-    else res.redirect('/login')
+    else res.redirect('/user/login')
 }
+
+// User Routes
+app.use('/user', user)
 
 // Logout route
 app.get('/logout', isAuthenticated, (req, res) => {
     req.session.destroy((err) => {
         if(err) throw err;
     })
-    
     res.redirect('/')
 });
 
@@ -104,18 +80,21 @@ app.get('/logout', isAuthenticated, (req, res) => {
 // Authenticated Index route
 app.get('/index', isAuthenticated, (req, res) => {
 
-    var sql = `SELECT subj FROM akronym`;
+    var sql = `SELECT subject_area FROM akronym`;
     db.query(sql, (err, result) => {
     if (err) throw err;
     res.render('index', {layout:'main',
         title: "Akronym.com",
-        searchResult:  result
+        searchResult:  result,
+        loggedin: req.session.userId
     });
 });
 });
+
 // Home route
 app.get('/', (req, res) => {
-    var sql = `SELECT subj FROM akronym`;
+    const sql = `SELECT subject_area FROM akronym`;
+    if (req.session.userId) res.redirect('/index');
     db.query(sql, (err, result) => {
     if (err) throw err;
     res.render('index', {layout:'main',
@@ -142,36 +121,15 @@ app.get('/about', (req, res) => {
     res.render('about', {title: "About us page"});
 });
 
-
-//Sign up route
-app.get('/signup', (req, res) => {
-    res.render('signup')
-});
-
-app.post('/signup', (req, res) => {
-    var firstname = req.body.firstname;
-    var lastname = req.body.lastname;
-    var email = req.body.email;
-    var password = req.body.password;
-    // var f_name = `My name is ${firstname}`
-    var sql = `INSERT INTO users (firstname, lastname, email, password) VALUES ("${firstname}", "${lastname}", "${email}", "${password}")`;
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-    });
-    res.render('signup', {
-        title: "Sign up",
-    });
-});
-
-
 // Create Acronym route
 app.get('/create', isAuthenticated, (req, res) => {
-        var sql = 'SELECT subj from akronym';
+        var sql = 'SELECT subject_area from akronym';
     db.query(sql, (err, result) => {
         if (err) throw err; 
     res.render('create', {
         title: "Create Acronym",
-        searchResult: result
+        searchResult: result,
+        loggedin: req.session.userId
     });
     });
 });
@@ -183,11 +141,11 @@ app.post('/create', isAuthenticated, (req, res) => {
     var definition =  req.body.definition;
     var other = req.body.other
     if (other==null) {
-    var sql = `INSERT INTO akronym (acronym, subj, meaning, definition) VALUES 
+    var sql = `INSERT INTO akronym (acronym, subject_area, meaning, definition) VALUES 
     ('${acronym}', '${subject}', '${meaning}', '${definition}');`
     }
     else{
-        var sql = `INSERT INTO akronym (acronym, subj, meaning, definition) VALUES 
+        var sql = `INSERT INTO akronym (acronym, subject_area, meaning, definition) VALUES 
     ('${acronym}', '${other}', '${meaning}', '${definition}');`
     }
     db.query(sql, (err, result) =>{

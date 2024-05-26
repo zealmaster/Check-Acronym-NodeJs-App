@@ -1,17 +1,17 @@
-const express = require('express');
-app = express();
-var mysql2 = require('mysql2');
+import express  from 'express';
+import  mysql2 from 'mysql2';
+import * as dotenv from 'dotenv';
+dotenv.config()
 
-var con = mysql2.createConnection({
- host: "localhost",
- user: "root",
- password: "root",
-database: "akronym"
+
+export const db = mysql2.createConnection({
+    host: process.env.MYSQSL_HOST,
+    port: process.env.MYSQL_PORT,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DB
 });
-con.connect((err)=> {
+db.connect((err)=> {
 if (err) throw err;
 console.log("Connected!")
 });
-
-
-module.exports = con;
