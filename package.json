@@ -2,11 +2,11 @@
   "name": "akronym",
   "version": "1.0.0",
   "description": "NodeJS Express Handlebars Application",
-  "main": "akronym.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon akronym.js"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
