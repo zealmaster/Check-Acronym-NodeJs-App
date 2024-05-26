@@ -5,6 +5,8 @@ var db = require('./database');
 var mysql2 = require('mysql2/promise');
 var MySQLStore = require('express-mysql-session');
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config()
 
 // set up express-handlebars
 const handlebars = require('express-handlebars');
@@ -23,15 +25,17 @@ list: function(value, options){
 }
 });
 
-// session and session storage
+// Database connection
 var options = {
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'root',
-    database: 'akronym'
+    host: process.env.MYSQSL_HOST,
+    port: process.env.MYSQL_PORT,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DB
 }
 var connection = mysql2.createPool(options);
+
+// session and session storage
 var sessionStore = new MySQLStore({}, connection);
 sessionStore.close();
 app.use(session({
