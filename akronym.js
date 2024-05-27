@@ -2,6 +2,7 @@ import express from "express";
 import { db } from "./database.js";
 import * as dotenv from "dotenv";
 dotenv.config();
+import { queryDb } from "./database.js";
 
 export const acronym = express.Router();
 
@@ -11,79 +12,71 @@ acronym.all((req, res, next) => {
 });
 
 // Create Acronym route
-acronym.get("/create", (req, res) => {
-  var sql = "SELECT subject_area from akronyms";
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.render("create", {
-      title: "Create Acronym",
-      searchResult: result,
-      loggedin: req.session.userId,
-    });
+acronym.get("/create", async (req, res) => {
+  const result = await queryDb("SELECT subject_area from akronyms");
+  res.render("create", {  
+    title: "Create Acronym",
+    searchResult: result,
+    loggedin: req.session.userId,
   });
 });
 
-acronym.post("/create", (req, res) => {
-  const subject = req.body.subject_area;
-  const acronym = req.body.acronym.toUpperCase();
-  const meaning = req.body.meaning;
-  const definition = req.body.definition;
-  const other = req.body.other;
-  db.query(
-    `SELECT * FROM akronyms WHERE acronym = "${acronym}" AND subject_area = "${subject}"`,
-    (err, result) => {
-      if (err) throw err;
-      if (result.length > 0) {
-        res.render("create", {
-          message: "Acronym already added.",
-          loggedin: req.session.userId,
-        });
+acronym.post("/create", async (req, res) => {
+  try {
+    const subject = req.body.subject_area;
+    const acronym = req.body.acronym.toUpperCase();
+    const meaning = req.body.meaning;
+    const definition = req.body.definition;
+    const other = req.body.other;
+
+    const acronymExists = await queryDb(
+      `SELECT * FROM akronyms WHERE acronym = "${acronym}" AND subject_area = "${subject}"`
+    );
+    if (acronymExists.length > 0) {
+      res.render("create", {
+        message: "Acronym already added.",
+        loggedin: req.session.userId,
+      });
+    } else {
+      if (other == null) {
+        await queryDb(`INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
+            ('${acronym}', '${subject}', ${req.session.userId},'${meaning}', '${definition}')`);
       } else {
-        if (other == null) {
-          var sql = `INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
-        ('${acronym}', '${subject}', ${req.session.userId},'${meaning}', '${definition}');`;
-        } else {
-          var sql = `INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
-        ('${acronym}', '${other}', ${req.session.userId}, '${meaning}', '${definition}');`;
-        }
-        db.query(sql, (err, result) => {
-          if (err) throw err;
-          res.redirect("index");
-        });
+        await queryDb(`INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
+            ('${acronym}', '${other}', ${req.session.userId}, '${meaning}', '${definition}')`);
       }
+      res.redirect("index");
     }
-  );
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-acronym.post("/comment/:acronym", (req, res) => {
-  const comment = req.body.comment;
-  const acronym_id = req.params.acronym;
-  const author_id = req.session.userId;
-
-  const sql = `INSERT INTO comments (acronym_id, author_id, comment) VALUES 
-        ('${acronym_id}', '${author_id}', '${comment}');`;
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.redirect(`/acronym/${acronym_id}`);
-  });
+// Add comment
+acronym.post("/comment/:acronym", async (req, res) => {
+  try {
+    const comment = req.body.comment;
+    const acronym_id = req.params.acronym;
+    const author_id = req.session.userId;
+    const addComment =
+      await queryDb(`INSERT INTO comments (acronym_id, author_id, comment) VALUES 
+    ('${acronym_id}', '${author_id}', '${comment}');`);
+    if (addComment) res.redirect(`/acronym/${acronym_id}`);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Display acronym
 acronym.get("/acronym/:id", async (req, res) => {
   const acronymId = req.params.id;
-
-  const queryDb = (sql) => {
-    return new Promise((resolve, reject) => {
-      db.query(sql, (err, result) => {
-        if (err) reject(err);
-        else resolve(result);
-      });
-    });
-  };
- 
   try {
-    const acronyms = await queryDb(`SELECT * FROM akronyms JOIN users ON users.id = akronyms.author_id WHERE akronyms.id = ${acronymId}`);
-    const comments = await queryDb(`SELECT * FROM comments JOIN users ON users.id = comments.author_id WHERE acronym_id = ${acronymId} `);
+    const acronyms = await queryDb(
+      `SELECT * FROM akronyms JOIN users ON users.id = akronyms.author_id WHERE akronyms.id = ${acronymId}`
+    );
+    const comments = await queryDb(
+      `SELECT * FROM comments JOIN users ON users.id = comments.author_id WHERE acronym_id = ${acronymId} `
+    );
     res.render("display-acronym", {
       title: acronyms[0]?.acronym,
       result: acronyms,
@@ -96,13 +89,14 @@ acronym.get("/acronym/:id", async (req, res) => {
 });
 
 // Search route
-acronym.post("/search", (req, res) => {
+acronym.post("/search", async (req, res) => {
   const search = req.body.search;
   const loggedin = req.session.userId;
-  const sql = `SELECT * FROM akronyms WHERE acronym = '${search}'`;
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    if (loggedin) {
+  const result = await queryDb(
+    `SELECT * FROM akronyms WHERE acronym = '${search}'`
+  );
+  if (loggedin) {
+    if (result.length > 0) {
       res.render("search", {
         title: "Search results",
         searchResult: result,
@@ -110,9 +104,18 @@ acronym.post("/search", (req, res) => {
       });
     } else {
       res.render("search", {
+        message: `No result for ${search} found`,
+        loggedin,
+      });
+    }
+  } else {
+    if (result.length > 0) {
+      res.render("search", {
         title: "Search results",
         searchResult: result,
       });
+    } else {
+      res.render("search", { message: `No result for ${search} found` });
     }
-  });
+  }
 });

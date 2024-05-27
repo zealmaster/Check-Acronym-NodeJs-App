@@ -2,7 +2,7 @@ import express from 'express';
 import session from 'express-session';
 import flash from 'connect-flash';
 import mysql2 from 'mysql2/promise';
-import { db } from './database.js';
+import { initializeDatabase } from './database.js';
 import handlebars from 'express-handlebars'
 import MySQLStore from 'express-mysql-session';
 const app = express();
@@ -10,6 +10,7 @@ import * as dotenv from 'dotenv';
 dotenv.config()
 import {user} from './user.js'
 import { acronym } from './akronym.js';
+import { queryDb } from './database.js';
 
 //Create custom helper
 const hbs = handlebars.create({
@@ -25,22 +26,25 @@ list: function(value, options){
 }
 });
 
-var options = {
+// Initialize database
+initializeDatabase().catch((err) => console.error(err));
+
+// session and session storage
+const options = {
     host: process.env.MYSQSL_HOST,
     port: process.env.MYSQL_PORT,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DB
 }
-var connection = mysql2.createPool(options);
+const connection = mysql2.createPool(options);
 
-// session and session storage
 var sessionStore = new MySQLStore({}, connection);
 sessionStore.close();
 
 app.use(session({
-    name: 'SESSION_ID', // cookie name stored in the web browser
-    secret: process.env.SESSION_SECRET,   //helps to protect session
+    name: 'SESSION_ID',
+    secret: process.env.SESSION_SECRET, 
     store: sessionStore,
     cookie: {
         maxAge: 30 * 85400000, // 30 * (24*60*60*1000) = 30 * 86400000 => session is stored 30 days
@@ -56,7 +60,6 @@ app.use(flash());
 app.use(express.urlencoded({extended: true}));
 app.engine('handlebars', hbs.engine);
 
-// app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
@@ -81,30 +84,24 @@ app.get('/logout', isAuthenticated, (req, res) => {
 
 
 // Authenticated Index route
-app.get('/index', isAuthenticated, (req, res) => {
-    var sql = `SELECT * FROM akronyms`;
-    db.query(sql, (err, result) => {
-    if (err) throw err;
+app.get('/index', isAuthenticated, async (req, res) => {
+    const result = await queryDb(`SELECT * FROM akronyms`);
     res.render('index', {layout:'main',
         title: "Akronym.com",
         searchResult:  result,
         loggedin: req.session.userId
     });
 });
-});
 
 // Home route
-app.get('/', (req, res) => {
-    const sql = `SELECT * FROM akronyms`;
+app.get('/', async (req, res) => {
+    const result = await queryDb(`SELECT * FROM akronyms`);
     if (req.session.userId) res.redirect('/index');
-    db.query(sql, (err, result) => {
-    if (err) throw err;
     res.render('index', {layout:'main',
         title: "Akronym.com",
         searchResult:  result
     });
-});
-});    
+});  
 
 app.get('/about', (req, res) => {
     res.render('about', {title: "About us page"});

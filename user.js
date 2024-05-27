@@ -1,6 +1,6 @@
 import express from "express";
 import * as bcrypt from "bcrypt";
-import { db } from "./database.js";
+import { queryDb } from "./database.js";
 
 export const user = express.Router();
 
@@ -16,42 +16,43 @@ user.post("/signup", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirm_password;
-  if (confirmPassword != password) {
-    res.render("signup", { message: "Passwords unmatched." });
-  } else {
-    db.query(
-      `SELECT * FROM users WHERE email = "${email}"`,
-      async (err, result) => {
-        if (err) throw err;
-        if (result.length > 0) {
-          res.render("signup", {
-            message: `User with email ${result[0].email} exists.`,
-          });
-        } else {
-          const passwordHash = await bcrypt.hash(password, 10);
-          const sql = `INSERT INTO users (firstname, lastname, email, password) VALUES ("${firstname}", "${lastname}", "${email}", "${passwordHash}")`;
-          db.query(sql, (err, result) => {
-            if (err) throw err;
-            res.redirect("login");
-          });
-        }
+  try {
+    if (confirmPassword != password) {
+      res.render("signup", { message: "Passwords unmatched." });
+    } else {
+      const emailExist = await queryDb(
+        `SELECT * FROM users WHERE email = "${email}"`
+      );
+      console.log(emailExist);
+      if (emailExist.length > 0) {
+        res.render("signup", {
+          message: `User with email ${emailExist[0].email} exists.`,
+        });
+      } else {
+        const passwordHash = await bcrypt.hash(password, 10);
+        const user = await queryDb(
+          `INSERT INTO users (firstname, lastname, email, password) VALUES ("${firstname}", "${lastname}", "${email}", "${passwordHash}")`
+        );
+        if (user) res.redirect("login");
       }
-    );
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
 // Login page
 user.get("/login", (req, res) => {
+  if (req.session.userId) res.redirect('/index')
   res.render("login", { title: "Login" });
 });
 
 // Login server side
 user.post("/login", async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const sql = `SELECT * FROM users WHERE email = '${email}'`;
-  db.query(sql, async (err, result) => {
-    if (err) throw err;
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+    const result = await queryDb(`SELECT * FROM users WHERE email = '${email}'`);
     if (result.length > 0) {
       const user = result[0];
       const passwordMatch = await bcrypt.compare(password, user.password);
@@ -66,5 +67,7 @@ user.post("/login", async (req, res) => {
     } else {
       res.render("login", { message: "Email does not exist." });
     }
-  });
+  } catch (error) {
+    console.log(error);
+  }
 });
