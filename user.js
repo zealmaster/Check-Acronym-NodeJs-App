@@ -59,7 +59,7 @@ user.post("/login", async (req, res) => {
         req.session.userId = user.id;
         req.session.loggedin = true;
         req.session.email = email;
-        res.render("index", { result: result, loggedin: req.session.userId });
+        res.redirect("/index");
       } else {
         res.render("login", { message: "Wrong Password." });
       }

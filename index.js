@@ -82,7 +82,7 @@ app.get('/logout', isAuthenticated, (req, res) => {
 
 // Authenticated Index route
 app.get('/index', isAuthenticated, (req, res) => {
-    var sql = `SELECT subject_area FROM akronym`;
+    var sql = `SELECT * FROM akronyms`;
     db.query(sql, (err, result) => {
     if (err) throw err;
     res.render('index', {layout:'main',
@@ -95,7 +95,7 @@ app.get('/index', isAuthenticated, (req, res) => {
 
 // Home route
 app.get('/', (req, res) => {
-    const sql = `SELECT subject_area FROM akronym`;
+    const sql = `SELECT * FROM akronyms`;
     if (req.session.userId) res.redirect('/index');
     db.query(sql, (err, result) => {
     if (err) throw err;
@@ -106,81 +106,8 @@ app.get('/', (req, res) => {
 });
 });    
 
-
-// Search route
-app.post('/search', (req, res) => {
-    var search = req.body.search;
-var sql = `SELECT * FROM akronym WHERE acronym = '${search}'`;
-db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.render('search', {
-        title: "Search results",
-        searchResult:  result
-    });
-});
-});
 app.get('/about', (req, res) => {
     res.render('about', {title: "About us page"});
-});
-
-// Create Acronym route
-app.get('/create', isAuthenticated, (req, res) => {
-        var sql = 'SELECT subject_area from akronym';
-    db.query(sql, (err, result) => {
-        if (err) throw err; 
-    res.render('create', {
-        title: "Create Acronym",
-        searchResult: result,
-        loggedin: req.session.userId
-    });
-    });
-});
-
-app.post('/create', isAuthenticated, (req, res) => {
-    var subject = req.body.subject;
-    var acronym =  req.body.acronym.toUpperCase();
-    var meaning =  req.body.meaning;
-    var definition =  req.body.definition;
-    var other = req.body.other
-    if (other==null) {
-    var sql = `INSERT INTO akronym (acronym, subject_area, meaning, definition) VALUES 
-    ('${acronym}', '${subject}', '${meaning}', '${definition}');`
-    }
-    else{
-        var sql = `INSERT INTO akronym (acronym, subject_area, meaning, definition) VALUES 
-    ('${acronym}', '${other}', '${meaning}', '${definition}');`
-    }
-    db.query(sql, (err, result) =>{
-        if (err) throw err;
-        res.render('create', {layout: 'main',
-            msg: 'Your acronym was submitted!'
-        })
-    });
-});
-
-// Show Profile
-app.get('/profile', isAuthenticated, (req, res) => {
-    var sql = `SELECT * FROM users WHERE id = ${req.session.userId}`;
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        res.render('profile', {
-            title: 'Profile page',
-            user: result
-        })
-    });
-})
-
-// Display acronym
-app.get('/acronym/:id', (req, res) => {
-    const acronymId = req.params.id;
-    var sql = `SELECT * FROM akronym WHERE id = ${acronymId}`
-    db.query(sql, (err, result) => {
-        console.log(result)
-        if (err) throw err;
-        res.render('display-acronym', {
-            title: result.acronym, acronym: result
-        });
-    })
 });
 
 app.listen(3000, () => {console.log('Server started at port', 3000);});
