@@ -52,7 +52,7 @@ acronym.post("/create", isAuthenticated, async (req, res) => {
   }
 });
 
-// Add comment
+// Add comment to acronym post
 acronym.post("/comment/:acronym", isAuthenticated, async (req, res) => {
   try {
     const comment = req.body.comment;
