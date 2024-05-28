@@ -1,5 +1,4 @@
 import express from "express";
-import { db } from "./database.js";
 import * as dotenv from "dotenv";
 dotenv.config();
 import { queryDb } from "./database.js";
@@ -104,7 +103,7 @@ acronym.post("/search", async (req, res) => {
       });
     } else {
       res.render("search", {
-        message: `No result for ${search} found`,
+        message: `No result found for ${search}`,
         loggedin,
       });
     }

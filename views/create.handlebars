@@ -1,14 +1,14 @@
 <br />
-<div class="container container-sm bg-outline-success shadow p-3 mb-3">
+<div class="">
   <div>{{message}}</div>
-  <form method="post" action="/create" class="form-control form-control-sm">
-    <div class="form-class">
+  <form method="post" action="/create" class="">
+    <div class="">
       <label for="acronym">Acronym</label><br />
       <input
         type="text"
         name="acronym"
         id="acronym"
-        class="form-control mb-3"
+        class=""
         placeholder="Type acronym. E.g. KI"
         required
       />
@@ -21,7 +21,7 @@
         style="display: block;"
         name="subject_area"
         class="dropmenu"
-        class="form-control form-control-sm mb-3"
+        class=""
         required
       >
         {{#with searchResult as |search|}}
@@ -47,7 +47,7 @@
       <textarea
         name="meaning"
         id="meaning"
-        class="form-control mb-3"
+        class=""
         placeholder="Type the meaning. E.g. Kingsley Ijuo"
         required
       ></textarea>
@@ -58,7 +58,7 @@
       <textarea
         name="definition"
         id="definition"
-        class="form-control"
+        class=""
         placeholder="Define the acronym. E.g. The nickname of Kingsley Ijuo Onah"
       ></textarea>
     </div>
@@ -67,7 +67,7 @@
     <input
       type="submit"
       value="Add"
-      class="form-control-sm btn btn-primary mb-3"
+      class=""
     />
   </form>
   <br />

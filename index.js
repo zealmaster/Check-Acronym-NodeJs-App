@@ -11,6 +11,8 @@ dotenv.config()
 import {user} from './user.js'
 import { acronym } from './akronym.js';
 import { queryDb } from './database.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 //Create custom helper
 const hbs = handlebars.create({
@@ -53,17 +55,22 @@ app.use(session({
     saveUninitialized: false
 }));
 
+// Middlewares
 app.use(express.json());
 app.use(flash());
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Include urlencoded middleware
 app.use(express.urlencoded({extended: true}));
-app.engine('handlebars', hbs.engine);
 
+// view engine configuration
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
-// Middleware 
+// Custom Middlewares
 function isAuthenticated(req, res, next){
     if(req.session.userId) next()
     else res.redirect('/user/login')

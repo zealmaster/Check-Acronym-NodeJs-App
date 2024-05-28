@@ -44,7 +44,7 @@ user.post("/signup", async (req, res) => {
 // Login page
 user.get("/login", (req, res) => {
   if (req.session.userId) res.redirect('/index')
-  res.render("login", { title: "Login" });
+  res.render("login", { title: "Login"});
 });
 
 // Login server side
