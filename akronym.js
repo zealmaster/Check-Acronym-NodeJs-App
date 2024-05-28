@@ -6,13 +6,13 @@ import { queryDb } from "./database.js";
 
 export const acronym = express.Router();
 
-acronym.all((req, res, next) => {
+function isAuthenticated (req, res, next){
   if (req.session.userId) next();
   else res.redirect("/user/login");
-});
+};
 
 // Create Acronym route
-acronym.get("/create", async (req, res) => {
+acronym.get("/create", isAuthenticated, async (req, res) => {
   const result = await queryDb("SELECT subject_area from akronyms");
   res.render("create", {  
     title: "Create Acronym",
@@ -21,7 +21,7 @@ acronym.get("/create", async (req, res) => {
   });
 });
 
-acronym.post("/create", async (req, res) => {
+acronym.post("/create", isAuthenticated, async (req, res) => {
   try {
     const subject = req.body.subject_area;
     const acronym = req.body.acronym.toUpperCase();
@@ -53,7 +53,7 @@ acronym.post("/create", async (req, res) => {
 });
 
 // Add comment
-acronym.post("/comment/:acronym", async (req, res) => {
+acronym.post("/comment/:acronym", isAuthenticated, async (req, res) => {
   try {
     const comment = req.body.comment;
     const acronym_id = req.params.acronym;
