@@ -14,6 +14,8 @@ import { queryDb } from './database.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+const port = process.env.PORT || 3000;
+
 //Create custom helper
 const hbs = handlebars.create({
 defaultLayout: 'main',
@@ -112,7 +114,7 @@ app.get('/', async (req, res) => {
 });  
 
 app.get('/about', (req, res) => {
-    res.render('about', {title: "About us page"});
+    res.render('about', {title: "About us page", loggedin: req.session.userId});
 });
 
-app.listen(3000, () => {console.log('Server started at port', 3000);});
+app.listen(port, () => {console.log('Server started at port', port);});
