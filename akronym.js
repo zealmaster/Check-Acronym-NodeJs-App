@@ -5,15 +5,15 @@ import { queryDb } from "./database.js";
 
 export const acronym = express.Router();
 
-function isAuthenticated (req, res, next){
+function isAuthenticated(req, res, next) {
   if (req.session.userId) next();
   else res.redirect("/user/login");
-};
+}
 
 // Create Acronym route
 acronym.get("/create", isAuthenticated, async (req, res) => {
   const result = await queryDb("SELECT subject_area from akronyms");
-  res.render("create", {  
+  res.render("create", {
     title: "Create Acronym",
     searchResult: result,
     loggedin: req.session.userId,
@@ -52,14 +52,16 @@ acronym.post("/create", isAuthenticated, async (req, res) => {
 });
 
 // Add comment to acronym post
-acronym.post("/comment/:acronym", isAuthenticated, async (req, res) => {
+acronym.post("/comment/:acronymId", isAuthenticated, async (req, res) => {
   try {
     const comment = req.body.comment;
-    const acronym_id = req.params.acronym;
+    const acronym_id = req.params.acronymId;
     const author_id = req.session.userId;
+    console.log(acronym_id);
     const addComment =
       await queryDb(`INSERT INTO comments (acronym_id, author_id, comment) VALUES 
     ('${acronym_id}', '${author_id}', '${comment}');`);
+    console.log(addComment);
     if (addComment) res.redirect(`/acronym/${acronym_id}`);
   } catch (error) {
     console.log(error);
@@ -71,10 +73,36 @@ acronym.get("/acronym/:id", async (req, res) => {
   const acronymId = req.params.id;
   try {
     const acronyms = await queryDb(
-      `SELECT * FROM akronyms JOIN users ON users.id = akronyms.author_id WHERE akronyms.id = ${acronymId}`
+      `SELECT 
+      acr.id, acr.acronym, 
+      acr.definition, 
+      acr.meaning, 
+      acr.subject_area, 
+      acr.author_id, 
+      acr.created_at, 
+      acr.updated_at, 
+      user.email, 
+      user.firstname, 
+      user.lastname 
+      FROM akronyms acr 
+      RIGHT JOIN users user 
+      ON user.id = acr.author_id 
+      WHERE acr.id = ${acronymId}`
     );
     const comments = await queryDb(
-      `SELECT * FROM comments JOIN users ON users.id = comments.author_id WHERE acronym_id = ${acronymId} `
+      `SELECT com.id,
+       com.acronym_id,
+       com.author_id,
+       com.comment,
+       com.created_at,
+       com.updated_at,
+       user.email,
+       user.firstname,
+       user.lastname 
+       FROM comments com
+       JOIN users user
+       ON user.id = com.author_id
+       WHERE com.acronym_id = ${acronymId}`
     );
     res.render("display-acronym", {
       title: acronyms[0]?.acronym,

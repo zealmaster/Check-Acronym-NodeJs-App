@@ -60,7 +60,7 @@ app.use(express.json());
 app.use(flash());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 //Include urlencoded middleware
 app.use(express.urlencoded({extended: true}));
@@ -86,6 +86,7 @@ app.get('/logout', isAuthenticated, (req, res) => {
     req.session.destroy((err) => {
         if(err) throw err;
     })
+    res.clearCookie()
     res.redirect('/')
 });
 
