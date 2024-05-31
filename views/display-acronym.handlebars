@@ -7,14 +7,15 @@
           </a>
         </div>
         <div class="display-content">
-          <p>{{this.meaning}}</p>
-          <p>{{this.definition}}</p>
+          <p><span>Meaning</span> <br> {{this.meaning}}</p>
+          
+          <p> <span>Definition</span> <br>{{this.definition}}</p>
         </div>
       {{/each}}
   </div>
     <div>
-      <div class="display-acronym-title">Comments</div>
       {{#if comments.length}}
+        <div class="display-acronym-title">Comments</div>
         {{#with comments as |comment|}}
           {{#each comment}}
             <p class="display-content">{{this.comment}} - <a href="#" style="font-size: 12px;">{{this.firstname}}</a></p>

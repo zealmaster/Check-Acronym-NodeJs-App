@@ -159,6 +159,10 @@ ul li {
     font-size: 15px;
     font-weight: 500px;
 }
+.display-content p span {
+ color: rgba(179, 216, 236, 0.911);
+ font-weight: 800;
+}
 
 .comment-form {
     display: flex;
