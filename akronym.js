@@ -22,27 +22,28 @@ acronym.get("/create", isAuthenticated, async (req, res) => {
 
 acronym.post("/create", isAuthenticated, async (req, res) => {
   try {
-    const subject = req.body.subject_area;
+    const subject_area = req.body.subject_area;
     const acronym = req.body.acronym.toUpperCase();
     const meaning = req.body.meaning;
     const definition = req.body.definition;
     const other = req.body.other;
 
     const acronymExists = await queryDb(
-      `SELECT * FROM akronyms WHERE acronym = "${acronym}" AND subject_area = "${subject}"`
+      `SELECT * FROM akronyms WHERE acronym = "${acronym}" AND subject_area = "${subject_area}"`
     );
+
     if (acronymExists.length > 0) {
       res.render("create", {
         message: "Acronym already added.",
         loggedin: req.session.userId,
       });
     } else {
-      if (other == null) {
+      if (other == "") {
         await queryDb(`INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
-            ('${acronym}', '${subject}', ${req.session.userId},'${meaning}', '${definition}')`);
+            ('${acronym}', '${subject_area}', ${req.session.userId},'${meaning}', '${definition}') ON DUPLICATE KEY UPDATE id=id`);
       } else {
         await queryDb(`INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
-            ('${acronym}', '${other}', ${req.session.userId}, '${meaning}', '${definition}')`);
+            ('${acronym}', '${other}', ${req.session.userId}, '${meaning}', '${definition}') ON DUPLICATE KEY UPDATE id=id`);
       }
       res.redirect("index");
     }
