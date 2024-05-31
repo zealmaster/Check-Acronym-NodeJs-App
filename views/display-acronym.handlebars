@@ -1,35 +1,37 @@
-</br>
-<div class="">
+<div class="display">
   <div class="">
     {{#if result.length}}
       {{#each result}}
-        <p>{{this.acronym}} in {{this.subject_area}} - <a href="/profile"> {{this.firstname}}</a></p>
+       <div class="display-acronym-title"> 
+          {{this.acronym}} in {{this.subject_area}} - <a href="/profile"> {{this.firstname}}
+          </a>
+        </div>
         <p>{{this.meaning}}</p>
         <p>{{this.definition}}</p>
       {{/each}}
-      <div>
-        <strong>Comments</strong>
-        {{#if comments.length}}
-          {{#with comments as |comment|}}
-            {{#each comment}}
-              <p>{{this.comment}} - <a href="#">{{this.firstname}}</a></p>
-            {{/each}}
-          {{/with}}
-        {{/if}}
-
-      </div>
-      {{#if loggedin}}
-        {{#each result}}
-          <form action="/comment/{{this.id}}" method="post">
-            <textarea name="comment" placeholder="Add comment"></textarea>
-            <button type="submit">Comment</button>
-          </form>
-        {{/each}}
+  </div>
+    <div>
+      <div class="display-acronym-title">Comments</div>
+      {{#if comments.length}}
+        {{#with comments as |comment|}}
+          {{#each comment}}
+            <p>{{this.comment}} - <a href="#">{{this.firstname}}</a></p>
+          {{/each}}
+        {{/with}}
       {{/if}}
-
+  </div>
+  <div>
+      {{#if loggedin}}
+      {{#each result}}
+        <form action="/comment/{{this.id}}" method="post">
+          <textarea name="comment" placeholder="Add comment"></textarea>
+          <button type="submit">Comment</button>
+        </form>
+      {{/each}}
+    {{/if}}
+  </div>
     {{else}}
       <p>No results found.</p>
     {{/if}}
   </div>
-
 </div>

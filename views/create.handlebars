@@ -1,7 +1,6 @@
-<br />
 <div class="">
   <div>{{message}}</div>
-  <form method="post" action="/create" class="">
+  <form method="post" action="/create" class="acronym-form">
     <div class="">
       <label for="acronym">Acronym</label><br />
       <input
@@ -21,7 +20,6 @@
         style="display: block;"
         name="subject_area"
         class="dropmenu"
-        class=""
         required
       >
         {{#with searchResult as |search|}}
@@ -64,11 +62,11 @@
     </div>
     <br />
 
-    <input
+    <button
       type="submit"
       value="Add"
       class=""
-    />
+    >Add </button>
   </form>
   <br />
 </div>
