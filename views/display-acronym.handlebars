@@ -3,11 +3,13 @@
     {{#if result.length}}
       {{#each result}}
        <div class="display-acronym-title"> 
-          {{this.acronym}} in {{this.subject_area}} - <a href="/profile"> {{this.firstname}}
+          {{this.acronym}} in {{this.subject_area}} - <a href="/profile" style="font-size: 15px;"> {{this.firstname}}
           </a>
         </div>
-        <p>{{this.meaning}}</p>
-        <p>{{this.definition}}</p>
+        <div class="display-content">
+          <p>{{this.meaning}}</p>
+          <p>{{this.definition}}</p>
+        </div>
       {{/each}}
   </div>
     <div>
@@ -15,7 +17,7 @@
       {{#if comments.length}}
         {{#with comments as |comment|}}
           {{#each comment}}
-            <p>{{this.comment}} - <a href="#">{{this.firstname}}</a></p>
+            <p class="display-content">{{this.comment}} - <a href="#" style="font-size: 12px;">{{this.firstname}}</a></p>
           {{/each}}
         {{/with}}
       {{/if}}
@@ -23,8 +25,8 @@
   <div>
       {{#if loggedin}}
       {{#each result}}
-        <form action="/comment/{{this.id}}" method="post">
-          <textarea name="comment" placeholder="Add comment"></textarea>
+        <form action="/comment/{{this.id}}" method="post" class="comment-form">
+          <textarea name="comment" placeholder="Add comment" required></textarea>
           <button type="submit">Comment</button>
         </form>
       {{/each}}

@@ -6,10 +6,10 @@ body {
 }
 a {
     text-decoration: none;
-    /* color: rgb(49, 133, 243); */
+    color: rgb(49, 133, 243);
 }
 a:visited {
-    /* color: rgb(49, 133, 243); */
+    color: rgb(49, 133, 243);
 }
 
 ul li {
@@ -125,16 +125,16 @@ ul li {
 .acronym-form button {
     width: 80px;
     height: 40px;
-    background-color: rgb(13, 72, 110);
     color: white;
     font-size: 18px;
-    font-weight: 700;
     line-height: 9px;
+    color: green;
+    border-style: none;
 }
 .acronym-form input, select, textarea, button {
     border-radius: 5px;
     outline-style: none;
-    border-width: 2px;
+    border-width: 3px;
     border-color: rgba(227, 240, 247, 0.911);
     margin-top: 5px;
 }
@@ -152,4 +152,27 @@ ul li {
 .display {
     border: solid 1px rgba(227, 240, 247, 0.911);
     padding: 20px;
+}
+
+.display-content {
+    padding-left: 20px;
+    font-size: 15px;
+    font-weight: 500px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 20px;
+}
+.comment-form textarea {
+    width: 200px;
+    height: 30px;
+    text-indent: 9px;
+    resize: none;
+}
+.comment-form button {
+    height: 30px;
+    border-radius: 6px;
+    color: green;
+    border-style: none;
 }
