@@ -15,7 +15,7 @@
   </div>
     <div>
       {{#if comments.length}}
-        <div class="display-acronym-title">Comments</div>
+        <div class="comment">Comments</div>
         {{#with comments as |comment|}}
           {{#each comment}}
             <p class="display-content">{{this.comment}} - <a href="#" style="font-size: 12px;">{{this.firstname}}</a></p>
@@ -27,7 +27,7 @@
       {{#if loggedin}}
       {{#each result}}
         <form action="/comment/{{this.id}}" method="post" class="comment-form">
-          <textarea name="comment" placeholder="Add comment" required></textarea>
+          <textarea name="comment" placeholder="Add a comment" required></textarea>
           <button type="submit">Comment</button>
         </form>
       {{/each}}
