@@ -22,11 +22,11 @@
         class="dropmenu"
         required
       >
-        {{#with searchResult as |search|}}
-          {{#each search}}
-            <option>{{this.subject_area}}</option>
+        {{!-- {{#with searchResult as |search|}} --}}
+          {{#each subjects}}
+            <option>{{this}}</option>
           {{/each}}
-        {{/with}}
+        {{!-- {{/with}} --}}
         <option>Others</option>
       </select>
       <br /><br />
