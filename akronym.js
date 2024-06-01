@@ -12,10 +12,14 @@ function isAuthenticated(req, res, next) {
 
 // Create Acronym route
 acronym.get("/create", isAuthenticated, async (req, res) => {
-  const result = await queryDb("SELECT subject_area from akronyms");
+  let subjects = new Set();
+  const results = await queryDb("SELECT subject_area from akronyms");
+  for (const result of results) {
+    subjects.add(result.subject_area);
+  }
   res.render("create", {
     title: "Create Acronym",
-    searchResult: result,
+    subjects,
     loggedin: req.session.userId,
   });
 });
