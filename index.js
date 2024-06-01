@@ -98,7 +98,7 @@ app.get('/logout', isAuthenticated, (req, res) => {
 
 // Authenticated Index route
 app.get('/index', isAuthenticated, async (req, res) => {
-    const result = await queryDb(`SELECT * FROM akronyms`);
+    const result = await queryDb(`SELECT * FROM akronyms ORDER BY acronym ASC`);
     res.render('index', {layout:'main',
         title: "Akronym.com",
         searchResult:  result,
@@ -108,7 +108,7 @@ app.get('/index', isAuthenticated, async (req, res) => {
 
 // Home route
 app.get('/', async (req, res) => {
-    const result = await queryDb(`SELECT * FROM akronyms`);
+    const result = await queryDb(`SELECT * FROM akronyms ORDER BY acronym ASC`);
     if (req.session.userId) res.redirect('/index');
     res.render('index', {layout:'main',
         title: "Akronym.com",
