@@ -2,13 +2,9 @@ import express from "express";
 import * as dotenv from "dotenv";
 dotenv.config();
 import { queryDb } from "./database.js";
+import { isAuthenticated } from "./index.js";
 
 export const acronym = express.Router();
-
-function isAuthenticated(req, res, next) {
-  if (req.session.userId) next();
-  else res.redirect("/user/login");
-}
 
 // Create Acronym route
 acronym.get("/create", isAuthenticated, async (req, res) => {
