@@ -1,0 +1,89 @@
+<main>
+    <div class="profile">
+        <menu class="profile-section">
+            <div id="account">Account</div>
+            <div id="dashboard">Dashboard</div>
+            <div id="acronym">Acronyms</div>
+            <div id="edit-profile">Edit profile</div>
+        </menu>
+        <section id="account-section">
+            {{#each user}}
+            <p><span>First Name</span><br>{{this.firstname}}</p>
+            <p><span>Last Name</span><br>{{this.lastname}}</p>
+            <p><span>Email Address</span><br>{{this.email}}</p>  
+        {{/each}}
+        </section>
+        <section id="acronym-section">
+            {{#each userAcronyms}}
+            <p>{{this.acronym}} in {{this.subject_area}}</p>
+        {{/each}}
+        </section>
+
+        <section id="dashboard-section">
+        <p>Number of acronyms posted: {{totalAcronyms}}</p>
+        <p>Number of acronyms posted: {{totalComments}}</p>
+        </section>
+
+        <section id="edit-profile-section">
+            {{#each user}}
+            <form method="post" action="/user/edit-profile">
+            <input type="hidden" name="_method" value="PUT">
+                First Name: <input value="{{this.firstname}}" name="firstname" required/> <br>
+                Last Name: <input value="{{this.lastname}}" name="lastname" required/> <br>
+                Passport: <input  name="password" /><span style="color: red;"> (Leave empty if you don't want to change your password)</span><br>
+                <button type="submit" value="submit">Submit</button>
+            </form>
+            {{/each}}
+        </section>
+    </div>
+
+    <script>
+    var account = document.getElementById('account');
+    var accountInfo = document.getElementById('account-section');
+    var dashboard = document.getElementById('dashboard');
+    var dashboardInfo = document.getElementById('dashboard-section');
+    var acronym = document.getElementById('acronym');
+    var acronymInfo = document.getElementById('acronym-section');
+    var editProfile = document.getElementById('edit-profile');
+    var editProfileForm = document.getElementById('edit-profile-section')
+    
+    accountInfo.style.display = 'none';
+    dashboardInfo.style.display = 'none';
+    acronymInfo.style.display = 'none';
+    editProfileForm.style.display = 'none';
+
+    account.addEventListener('click', displayAccountInfo);
+    dashboard.addEventListener('click', displayDashboard);
+    acronym.addEventListener('click', displayAcronym);
+    editProfile.addEventListener('click', displayEditProfile);
+
+    function displayAccountInfo() {
+        accountInfo.style.display = 'block';
+        dashboardInfo.style.display = 'none';
+        acronymInfo.style.display = 'none';
+        editProfileForm.style.display = 'none';
+    }
+
+    function displayDashboard() {
+        dashboardInfo.style.display = 'block';
+        accountInfo.style.display = 'none';
+        acronymInfo.style.display = 'none';
+        editProfileForm.style.display = 'none';
+    }
+    function displayAcronym() {
+        acronymInfo.style.display = 'block';
+        dashboardInfo.style.display = 'none';
+        accountInfo.style.display = 'none';
+        editProfileForm.style.display = 'none';
+    }
+    
+    function displayEditProfile() {
+        editProfileForm.style.display = 'block';
+        acronymInfo.style.display = 'none';
+        dashboardInfo.style.display = 'none';
+        accountInfo.style.display = 'none';
+
+    }
+</script>
+
+</main>
