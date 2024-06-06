@@ -14,7 +14,7 @@ export let db = await mysql2.createConnection(options);
 
 export async function initializeDatabase() {
   const createDbSql = `
-    CREATE DATABASE IF NOT EXISTS akronym;
+    CREATE DATABASE IF NOT EXISTS ${process.env.MYSQL_DB};
   `;
   try {
     await db.query(createDbSql);
@@ -25,7 +25,7 @@ export async function initializeDatabase() {
   }
 
   // Reconnect with the database specified
-  options.database = 'akronym';
+  options.database = process.env.MYSQL_DB;
   db = await mysql2.createConnection(options);
 
   const createTablesSql = `
