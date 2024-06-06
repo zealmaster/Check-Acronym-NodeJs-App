@@ -76,9 +76,15 @@ app.set('view engine', 'handlebars');
 app.set('views', './views');
 
 // Custom Middlewares
-export function isAuthenticated(req, res, next){
-    if(req.session.userId) next()
-    else res.redirect('/user/login')
+export function isAuthenticated(req, res, next) {
+    try {
+        if(req.session.userId) {
+            next()
+        } else res.redirect('/user/login')
+    
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // User Routes
@@ -91,7 +97,7 @@ app.get('/logout', isAuthenticated, (req, res) => {
     req.session.destroy((err) => {
         if(err) throw err;
     })
-    res.clearCookie()
+    res.clearCookie('SESSION_ID');
     res.redirect('/')
 });
 
