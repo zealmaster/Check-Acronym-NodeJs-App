@@ -40,10 +40,10 @@ acronym.post("/create", isAuthenticated, async (req, res) => {
     } else {
       if (other == "") {
         await queryDb(`INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
-            ('${acronym}', '${subject_area}', ${req.session.userId},'${meaning}', '${definition}') ON DUPLICATE KEY UPDATE id=id`);
+            ('${acronym}', "${subject_area}", ${req.session.userId},"${meaning}", "${definition}") ON DUPLICATE KEY UPDATE id=id`);
       } else {
         await queryDb(`INSERT INTO akronyms (acronym, subject_area, author_id, meaning, definition) VALUES 
-            ('${acronym}', '${other}', ${req.session.userId}, '${meaning}', '${definition}') ON DUPLICATE KEY UPDATE id=id`);
+            ('${acronym}', '${other}', ${req.session.userId}, "${meaning}", "${definition}") ON DUPLICATE KEY UPDATE id=id`);
       }
       res.redirect("index");
     }
@@ -58,12 +58,10 @@ acronym.post("/comment/:acronymId", isAuthenticated, async (req, res) => {
     const comment = req.body.comment;
     const acronym_id = req.params.acronymId;
     const author_id = req.session.userId;
-    console.log(acronym_id);
     const addComment =
       await queryDb(`INSERT INTO comments (acronym_id, author_id, comment) VALUES 
-    ('${acronym_id}', '${author_id}', '${comment}');`);
-    console.log(addComment);
-    if (addComment) res.redirect(`/acronym/${acronym_id}`);
+    (${acronym_id}, ${author_id}, "${comment}");`);
+    if (addComment.affectedRows > 0) res.redirect(`/acronym/${acronym_id}`);
   } catch (error) {
     console.log(error);
   }
