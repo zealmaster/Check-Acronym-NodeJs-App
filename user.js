@@ -2,10 +2,10 @@ import express from "express";
 import * as bcrypt from "bcrypt";
 import { queryDb } from "./database.js";
 import { isAuthenticated } from "./index.js";
-import methodOverride from 'method-override';
+import flash from "connect-flash";
 
 export const user = express.Router();
-user.use(methodOverride('_method'));
+user.use(flash());
 
 // Signup page
 user.get("/signup", (req, res) => {
@@ -45,30 +45,37 @@ user.post("/signup", async (req, res) => {
 });
 
 user.put("/edit-profile", isAuthenticated, async (req, res) => {
-  const firstname = req.body.firstname;
-  const lastname = req.body.lastname;
-  const password = req.body.password;
+  const { firstname, lastname, oldPassword, newPassword } = req.body;
   try {
     const userExist = await queryDb(
       `SELECT * FROM users WHERE id = "${req.session.userId}"`
     );
     if (userExist.length > 0) {
       let user;
-      if ((password === "")) {
+      if (!newPassword) {
         user = await queryDb(
-          `INSERT INTO users (firstname, lastname) VALUES ("${firstname}", "${lastname}")`
+          `UPDATE users SET firstname = "${firstname}", lastname = "${lastname}" WHERE id = ${req.session.userId}`
         );
-        if (user) {
-          res.redirect("login");
+        if (user.affectedRows > 0) {
+          res.render("index");
         }
       } else {
-        const passwordHash = await bcrypt.hash(password, 10);
-        user = await queryDb(
-          `INSERT INTO users (firstname, lastname, password) VALUES ("${firstname}", "${lastname}", "${passwordHash}")`
-        );
-        if (user) {
-          req.session.destroy();
-          res.redirect("login");
+        const password = userExist[0].password;
+        const passwordMatch = await bcrypt.compare(oldPassword, password);
+        if (!passwordMatch) {
+          res.render("index", { message: "Password incorrect" });
+        } else {
+          const passwordHash = await bcrypt.hash(newPassword, 10);
+          user = await queryDb(
+            `UPDATE users SET firstname = "${firstname}", lastname = "${lastname}", password = "${passwordHash}" WHERE id = ${req.session.userId}`
+          );
+          if (user.affectedRows > 0) {
+            req.session.destroy((err) => {
+              if (err) console.log(err);
+            });
+            res.clearCookie("SESSION_ID");
+            res.redirect("login");
+          }
         }
       }
     }
@@ -101,7 +108,19 @@ user.post("/login", async (req, res) => {
         req.session.userId = user.id;
         req.session.loggedin = true;
         req.session.email = email;
-        res.redirect("/index");
+
+        req.session.save((err) => {
+          if (err) {
+            console.error("Session save error:", err);
+            return res
+              .status(500)
+              .render("login", {
+                message:
+                  "An error occurred while logging in. Please try again.",
+              });
+          }
+          res.redirect("/index");
+        });
       } else {
         res.render("login", { message: "Wrong Password." });
       }
@@ -113,7 +132,7 @@ user.post("/login", async (req, res) => {
   }
 });
 
-user.get("/profile", async (req, res) => {
+user.get("/profile", isAuthenticated, async (req, res) => {
   const loggedin = req.session.userId;
   const user = await queryDb(`SELECT * FROM users WHERE id = ${loggedin}`);
   const userAcronyms = await queryDb(
