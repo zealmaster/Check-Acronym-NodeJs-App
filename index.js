@@ -11,13 +11,10 @@ import { acronym } from './akronym.js';
 import { queryDb } from './database.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import methodOverride from 'method-override';
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
-
-app.use(methodOverride('_method'));
 
 //Create custom helper
 const hbs = handlebars.create({
