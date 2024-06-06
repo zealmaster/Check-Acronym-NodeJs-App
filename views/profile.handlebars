@@ -25,13 +25,15 @@
         </section>
 
         <section id="edit-profile-section">
+            {{message}}
             {{#each user}}
-            <form method="post" action="/user/edit-profile">
-            <input type="hidden" name="_method" value="PUT">
-                First Name: <input value="{{this.firstname}}" name="firstname" required/> <br>
-                Last Name: <input value="{{this.lastname}}" name="lastname" required/> <br>
-                Passport: <input  name="password" /><span style="color: red;"> (Leave empty if you don't want to change your password)</span><br>
-                <button type="submit" value="submit">Submit</button>
+            <form id="edit-profile-form">
+                <input type="hidden" name="_method" value="PUT">
+                First Name: <input id="firstname" name="firstname" value="{{this.firstname}}" required/> <br>
+                Last Name: <input id="lastname" name="lastname" value="{{this.lastname}}" required/> <br>
+                Current Password: <input id="oldPassword" name="oldPassword" /><span style="color: red;"> {{message}}</span><br>
+                New Password: <input id="newPassword" name=" newPassword" /><span style="color: red;"> (Leave empty if you don't want to change your password)</span><br>
+                <button type="submit" value="submit" id="form-button">Submit</button>
             </form>
             {{/each}}
         </section>
@@ -45,7 +47,7 @@
     var acronym = document.getElementById('acronym');
     var acronymInfo = document.getElementById('acronym-section');
     var editProfile = document.getElementById('edit-profile');
-    var editProfileForm = document.getElementById('edit-profile-section')
+    var editProfileForm = document.getElementById('edit-profile-section');
     
     accountInfo.style.display = 'none';
     dashboardInfo.style.display = 'none';
@@ -82,8 +84,42 @@
         acronymInfo.style.display = 'none';
         dashboardInfo.style.display = 'none';
         accountInfo.style.display = 'none';
-
     }
+
+   document.getElementById('edit-profile-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent form from submitting the traditional way
+
+    const firstname = document.getElementById('firstname').value;
+    const lastname = document.getElementById('lastname').value;
+    const oldPassword = document.getElementById('oldPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+
+    const data = {
+        firstname: firstname,
+        lastname: lastname,
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+    };
+    try {
+        const response = await fetch('/user/edit-profile', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        // Handle successful response
+        console.log('Profile updated successfully');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
 </script>
 
 </main>
