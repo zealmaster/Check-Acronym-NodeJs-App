@@ -1,4 +1,8 @@
-
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */
 body {
     margin: 0;
     padding: 0;
@@ -156,7 +160,7 @@ ul li {
     font-weight: 500;
     margin-left: 5px;
 }
-.display {
+.display, .create, .index {
     border: solid 1px rgba(227, 240, 247, 0.911);
     padding: 20px;
 }

@@ -1,13 +1,12 @@
-<link rel="stylesheet" href="css/style.css" />
-
-<div class="">
-
-<div class="">  
-{{#with searchResult as |search|}}
-{{#each search}}
-<p><a href="/acronym/{{this.id}}"> {{this.acronym}} in {{this.subject_area}}</a></p>
-{{/each}}
-{{/with}}
-<br>
-</div>
-</div>
+<main class="index">
+    <div class="">
+        <div class="">  
+            {{#with searchResult as |search|}}
+            {{#each search}}
+            <p><a href="/acronym/{{this.id}}"> {{this.acronym}} in {{this.subject_area}}</a></p>
+            {{/each}}
+            {{/with}}
+            <br>
+        </div>
+    </div>
+</main>
