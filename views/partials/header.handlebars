@@ -1,51 +1,142 @@
+<main>
+    <nav class="nav-bar">
+        <div class="site-title">
+            <a href="/">Check Acronym</a>
+        </div>
+        <div class="side-bar" id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="close-menu" id="close-menu">
+            <div></div>
+            <div></div>
+        </div>
 
- <nav class="nav-bar" >
-    <div class="site-title">
-        <a  href="/">Check Acronym</a>
-    </div>
 
-    <div class="header" >
-    <div>
-        <ul class="menu-right">
-        {{!-- {% if user.is_authenticated %} --}}
-        {{#if loggedin}}
-                <li class="">
-                    <a href="/index" class="">Home</a>
+        <div class="menu">
+            {{!-- {% if user.is_authenticated %} --}}
+            {{#if loggedin}}
+            <ul class="menu-left">
+                <li>
+                    <a href="/index">Home</a>
                 </li>
-                <li class="">
-                    <a href="/create" class="">Add Acronym</a>
+                <li>
+                    <a href="/create">Add Acronym</a>
                 </li>
-        </ul>
-    </div>
+            </ul>
 
-    <div class="menu-left">
-        <ul class="menu-right">
-            <li>
-                <a class="" href="/logout">Logout 
-                    {{!-- {{#each result}}
-                    {{this.firstname}}
-                    {{/each}}  --}}
-                </a>
-            </li>
-            <li><a class="" href="/user/profile">My profile</a></li>
-        </ul>
-    </div>
+            <ul class="menu-right">
+                <li><a href="/user/profile">My profile</a></li>
+                <li>
+                    <a href="/logout">Logout 
+                        {{!-- {{#each result}}
+                        {{this.firstname}}
+                        {{/each}} --}}
+                    </a>
+                </li>
+            </ul>
+            {{else}}
+            <ul class="menu-left">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/user/signup">Signup</a>
+                </li>
+                <li>
+                    <a href="/user/login">Login</a>
+                </li>
+            </ul>
+            {{/if}}
+        </div>
 
-    {{else}}
-            
-    <div class="menu-right">
-        <ul class="menu-right">
-            <li class="">
-                <a href="/" class="">Home</a>
-            </li>
-            <li class="">
-                <a href="/user/signup" class="">Signup</a>
-            </li>
-            <li class="">
-                <a href="/user/login" class="">Login</a>
-            </li>
-        {{/if}}
-        </ul>
-    </div>
-    </div>
-</nav>
+        <div class="hamburger-menu" id="hamburger-menu">
+
+            {{!-- {% if user.is_authenticated %} --}}
+            {{#if loggedin}}
+            <ul>
+                <li id="item">
+                    <a href="/index" id="item">Home</a>
+                </li>
+                <li id="item">
+                    <a href="/create" id="item">Add Acronym</a>
+                </li>
+                <li id="item">
+                    <a href="/user/profile" id="item">My profile</a>
+                </li>
+                <li id="item">
+                    <a href="/logout" id="item">Logout 
+                        {{!-- {{#each result}}
+                        {{this.firstname}}
+                        {{/each}} --}}
+                    </a>
+                </li>
+            </ul>
+            {{else}}
+            <ul>
+                <li id="item">
+                    <a href="/" id="item">Home</a>
+                </li>
+                <li id="item">
+                    <a href="/user/signup" id="item">Signup</a>
+                </li>
+                <li id="item">
+                    <a href="/user/login" id="item">Login</a>
+                </li>
+            </ul>
+            {{/if}}
+        </div>
+    </nav>
+    <script>
+        const sideBar = document.getElementById('hamburger');
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const items = document.querySelectorAll('#hamburger-menu #item');
+        const closeMenu = document.getElementById('close-menu');
+        hamburgerMenu.style.display = 'none';
+        closeMenu.style.display = 'none';
+
+
+        closeMenu.addEventListener('click', hideSideMenu);
+        sideBar.addEventListener('click', displaySideMenu);
+
+        items.forEach(item => {
+            item.addEventListener('click', hideSideMenu);
+        });
+
+        function displaySideMenu() {
+            closeMenu.style.display = 'block';
+         if (hamburgerMenu.style.display === 'block') {
+                hamburgerMenu.style.display = 'none';
+            } else {
+                hamburgerMenu.style.display ='flex';
+                hamburgerMenu.style.flexDirection = 'column';
+                hamburgerMenu.style.gap = '30px';
+                hamburgerMenu.style.height = '115vh';
+                hamburgerMenu.style.backgroundColor = '#c8e3db';
+                hamburgerMenu.style.width = '100%';
+                hamburgerMenu.style.zIndex = '99';
+                hamburgerMenu.style.paddingTop = '20px';
+                hamburgerMenu.style.opacity = '0.89';
+            }
+        }
+
+        function hideSideMenu() {
+            hamburgerMenu.style.display = 'none';
+            closeMenu.style.display = 'none';
+        }
+        // Hide the menu if screen size is greater than 450px
+        window.addEventListener('resize', () => {
+            if (window.matchMedia('(min-width: 450px)').matches) {
+                hamburgerMenu.style.display = 'none';
+                closeMenu.style.display = 'none';
+            }
+        });
+
+        // Initial check
+        if (window.matchMedia('(min-width: 450px)').matches) {
+            hamburgerMenu.style.display = 'none';
+            closeMenu.style.display = 'none';
+        }
+    </script>
+</main>
