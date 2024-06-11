@@ -8,20 +8,23 @@
         </menu>
         <section id="account-section">
             {{#each user}}
+            <div>Account Information</div>
             <p><span>First Name</span><br>{{this.firstname}}</p>
             <p><span>Last Name</span><br>{{this.lastname}}</p>
             <p><span>Email Address</span><br>{{this.email}}</p>  
         {{/each}}
         </section>
         <section id="acronym-section">
+        <div>Acronyms Posted</div>
             {{#each userAcronyms}}
-            <p>{{this.acronym}} in {{this.subject_area}}</p>
+            <p><a href="/acronym/{{this.id}}">{{this.acronym}}</a> in {{this.subject_area}}</p>
         {{/each}}
         </section>
 
         <section id="dashboard-section">
+        <div>Post Counts</div>
         <p>Number of acronyms posted: {{totalAcronyms}}</p>
-        <p>Number of acronyms posted: {{totalComments}}</p>
+        <p>Number of comments posted: {{totalComments}}</p>
         </section>
 
         <section id="edit-profile-section">
@@ -49,7 +52,7 @@
     var editProfile = document.getElementById('edit-profile');
     var editProfileForm = document.getElementById('edit-profile-section');
     
-    accountInfo.style.display = 'none';
+    accountInfo.style.display = 'block';
     dashboardInfo.style.display = 'none';
     acronymInfo.style.display = 'none';
     editProfileForm.style.display = 'none';
