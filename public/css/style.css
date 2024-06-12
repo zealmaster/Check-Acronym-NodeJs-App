@@ -231,24 +231,17 @@ ul li {
     }
     .menu {
         display: none;
-        font-size: 12px;
-        margin-left: 0;
         width: 100%;
-        gap: 3px;
     }
-    
-    .menu-right {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 60%;
+
+    .site-title {
+        z-index: 1;
+        width: fit-content;
+        padding: 10px;
     }
-    
-    .menu-left {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 0;
+    .site-title-side-bar {
+        width: fit-content;
+        padding: 10px;
     }
        
     .nav-bar {
@@ -309,13 +302,15 @@ ul li {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 4px;
+        gap: 2px;
+        background-color: white;
     }
 
     .side-bar div {
         border: solid 1px black;
         width: 15px;
-        color: white;        
+        color: white;    
+        margin: 1px;    
     }
 
     .hamburger-menu {
@@ -324,11 +319,12 @@ ul li {
         gap: 30px;
         height: 100vh;
         background-color: aliceblue;
-        width: 100vw;
+        /* width: 100vw; */
         z-index: 99;
         padding-top: 30px;
         font-weight: 700;
     }
+    
     #item {
         margin-left: 0;
         padding-top: 6px;

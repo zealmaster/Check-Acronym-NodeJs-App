@@ -1,6 +1,6 @@
 <main>
     <nav class="nav-bar">
-        <div class="site-title">
+        <div class="site-title" id="site-title">
             <a href="/">Check Acronym</a>
         </div>
         <div class="side-bar" id="hamburger">
@@ -52,6 +52,9 @@
         </div>
 
         <div class="hamburger-menu" id="hamburger-menu">
+            <div class="site-title-side-bar">
+            <a href="/">Check Acronym</a>
+        </div>
 
             {{!-- {% if user.is_authenticated %} --}}
             {{#if loggedin}}
@@ -93,6 +96,7 @@
         const hamburgerMenu = document.getElementById('hamburger-menu');
         const items = document.querySelectorAll('#hamburger-menu #item');
         const closeMenu = document.getElementById('close-menu');
+        const siteTitle = document.getElementById('site-title');
         hamburgerMenu.style.display = 'none';
         closeMenu.style.display = 'none';
 
@@ -106,6 +110,7 @@
 
         function displaySideMenu() {
             closeMenu.style.display = 'block';
+            siteTitle.style.display = 'none';
          if (hamburgerMenu.style.display === 'block') {
                 hamburgerMenu.style.display = 'none';
             } else {
@@ -124,6 +129,7 @@
         function hideSideMenu() {
             hamburgerMenu.style.display = 'none';
             closeMenu.style.display = 'none';
+            siteTitle.style.display = 'block';
         }
         // Hide the menu if screen size is greater than 450px
         window.addEventListener('resize', () => {
