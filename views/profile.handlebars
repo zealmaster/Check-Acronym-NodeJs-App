@@ -30,13 +30,27 @@
         <section id="edit-profile-section">
             {{message}}
             {{#each user}}
-            <form id="edit-profile-form">
+            <form id="edit-profile-form" class="form">
                 <input type="hidden" name="_method" value="PUT">
-                First Name: <input id="firstname" name="firstname" value="{{this.firstname}}" required/> <br>
-                Last Name: <input id="lastname" name="lastname" value="{{this.lastname}}" required/> <br>
-                Current Password: <input id="oldPassword" name="oldPassword" /><span style="color: red;"> {{message}}</span><br>
-                New Password: <input id="newPassword" name=" newPassword" /><span style="color: red;"> (Leave empty if you don't want to change your password)</span><br>
-                <button type="submit" value="submit" id="form-button">Submit</button>
+                <div class="form-field">
+                    <label for="firstname">First Name:</label>
+                    <input id="firstname" name="firstname" value="{{this.firstname}}" required/> <br>
+                </div>
+                <div class="form-field">
+                    <label for="lastname">Last Name:</label>
+                    <input id="lastname" name="lastname" value="{{this.lastname}}" required/> <br>
+                </div>
+                <div class="form-field">
+                    <label for="oldPassword">Current Password:</label>
+                    <input id="oldPassword" name="oldPassword" /><span style="color: red;"> {{message}}</span><br>
+                </div>
+                <div class="form-field">
+                    <label for="newPassword">New Password:</label>
+                    <input id="newPassword" name=" newPassword" /><span style="color: red;"> (Leave empty if you don't want to change your password)</span><br>
+                </div>
+                <div class="form-field">
+                    <button type="submit" value="submit" id="form-button">Submit</button>
+                </div>
             </form>
             {{/each}}
         </section>

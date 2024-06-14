@@ -91,17 +91,16 @@ ul li {
 
 .footer {
     position: absolute;
-    bottom: 0;
-    left: 3px;
+    bottom: -150px;
+    left: 0;
     height: 40px;
     padding-left: 20px;
-    padding-bottom: 9px;
+    margin-top: 100px;    
 }
 .footer div {
     display: flex;
     gap: 20px;
-    padding-top: 110px;
-    padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .body {
@@ -233,6 +232,7 @@ ul li {
     justify-content: center;
     gap: 20px;
     padding: 6px;
+    z-index: 99;
 }
 
 .form-field {
@@ -273,6 +273,11 @@ ul li {
     .site-title {
         font-size: 15px;
         padding-left: 10px;
+    }
+    .nav-bar {
+        width: 100%;
+        margin: 0;
+        padding: 0;
     }
     .menu {
         display: none;
@@ -322,7 +327,7 @@ ul li {
         padding: 0;
     }
     .footer {
-        width: 100%;
+        width: 97%;
         padding-left: 3px;
         margin-left: 4px;
     }
