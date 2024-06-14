@@ -1,21 +1,24 @@
 <br />
 <div class="container">
   <div style="color: red; margin-bottom: 5px;">{{message}}</div>
-  <form method="post" class="form-control form-control-sm">
-    <label for="email">Email</label>
-    <input type="text" name="email" placeholder="Enter username" id="email" />
-    <br />
-    <br />
-    <label for="password">Password</label>
-    <input
-      type="password"
-      name="password"
-      placeholder="Enter password"
-      id="password"
-    />
-    <br />
-    <br />
-    <input type="submit" value="Login" class="btn btn-primary" />
-    <a href="/user/signup">New? Sign up here.</a>
+  <form method="post" class="form">
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input type="text" name="email" placeholder="Enter username" id="email" />
+    </div>
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        name="password"
+        placeholder="Enter password"
+        id="password"
+      />
+    </div>
+    <div class="form-field">
+      <button type="submit" value="Login">Login</button>
+      <div>New?<a href="/user/signup"> Sign up here.</a>
+  </div>
+    </div>
   </form>
 </div>
