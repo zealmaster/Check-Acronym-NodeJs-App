@@ -224,6 +224,50 @@ ul li {
     display: none;
 }
 
+.signup-form {
+    margin: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 6px;
+}
+
+.signup-form-field {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    gap: 2px;
+}
+.signup-form-field label {
+    font-size: 16;
+    font-weight: 600;
+}
+.signup-form-field input {
+    width: 300px;
+    height: 20px;
+    margin: 3px;
+    border-color: rgba(227, 240, 247, 0.911);
+    outline-style: none;
+    padding: 6px;
+    border-radius: 6px;
+}
+.signup-form-field button {
+    width: 100px;
+    height: 30px;
+    margin: 3px;
+    border-color: rgba(227, 240, 247, 0.911);
+    color: green;
+    border-radius: 10px;
+    font-size: 18px;
+}
+.signup-form-field a {
+    color: blue;
+}
+
+
 @media screen and (max-width: 450px) {
     .site-title {
         font-size: 15px;
@@ -357,4 +401,12 @@ ul li {
     .close-menu div:nth-child(2) {
         transform: rotate(-45deg);
     }
+    
+    .signup-form-field input {
+        width: 200px;
+    }
+    .signup-form-field input::placeholder {
+        padding: 4px;    
+    }
+
     }

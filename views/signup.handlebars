@@ -1,33 +1,30 @@
 <h1>SIGN UP FORM</h1>
-<form method="POST" action="/user/signup" class="form-control form-control-sm">
-     <div class="form-class">
+<div class="sign-up">
+  <form class="signup-form" method="POST" action="/user/signup">
+     <div class="signup-form-field">
      <div class="">{{message}}</div> 
          <label for="firstname">First name</label>
-    <input type="text" name="firstname" id="firstname" placeholder="Enter first name" required>
+        <input type="text" name="firstname" id="firstname" placeholder="Enter first name" required>
     </div>
-    <br>
-    <div class="form-class">
+    <div class="signup-form-field">
          <label for="lastname">Last name</label>
-    <input type="text" name="lastname" id="lastname" placeholder="Enter last name" required>
+         <input type="text" name="lastname" id="lastname" placeholder="Enter last name" required>
     </div>
-    <br>
-<!--    <div class="form-class">-->
-<!--         <label for="username">Username</label>-->
-<!--    <input type="text" name="username" id="username" placeholder="Enter last username" required>-->
-<!--    </div>-->
-    <br>
-    <div>
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email" placeholder="Enter email" required>
-    </div><br>
-    <div>
+    <div class="signup-form-field">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="Enter email" required>
+    </div>
+    <div class="signup-form-field">
       <label for="password">Password</label>
-    <input type="password" name="password" id="password" placeholder="Enter password" required>
+      <input type="password" name="password" id="password" placeholder="Enter password" required>
     </div>
-    <br>
+    <div class="signup-form-field">
       <label for="confirm_password">Confirm Password</label>
-    <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
-    <br><br>
-    <div><button type="submit" value="Sign Up" class="btn btn-primary">Sign Up</button></div>
-    <a href="/login">Have account already? Login.</a>
+      <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
+    </div>
+    <div class="signup-form-field">
+      <button type="submit" value="Sign Up">Sign Up</button>
+      <div>Have account already? <a href="/user/login"> Login</a></div>
+    </div>
 </form>
+</div>
