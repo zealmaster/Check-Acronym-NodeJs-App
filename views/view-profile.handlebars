@@ -1,0 +1,17 @@
+<main class="user-profile">
+    <div class="user-profile-title">User Profile</div>
+    <div class="user-profile-item">
+       <li><span>First name</span>{{_user.firstname}}</li> 
+       <li><span>Last name</span>{{_user.lastname}}</li> 
+       <li><span>Email</span>{{_user.email}}</li> 
+       <li><span>Joined on</span>{{_user.created_at}}</li> 
+    </div>
+
+    <div class="user-profile-title">Acronyms ({{acronymCount}})</div>
+    <div class="user-profile-acronym">
+        {{#each acronyms}}
+       <li><a href="/acronym/{{this.id}}">{{this.acronym}}</a> in {{this.subject_area}}</li> 
+        {{/each}}
+    </div>
+
+</main>

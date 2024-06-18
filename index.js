@@ -11,6 +11,7 @@ import { acronym } from './akronym.js';
 import { queryDb } from './database.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import Dayjs  from 'dayjs';
 
 dotenv.config();
 const app = express();
@@ -122,5 +123,19 @@ app.get('/', async (req, res) => {
 app.get('/about', (req, res) => {
     res.render('about', {title: "About us page", loggedin: req.session.userId});
 });
+
+// View a user profile
+app.get('/profile/:user', isAuthenticated, async (req, res) => {
+    const userId = req.params.user;
+    const user = await queryDb(`SELECT * FROM users WHERE id = ${userId}`);
+    let _user;
+    for (const value of user) {
+        _user = value;
+    }
+    _user.created_at = new Dayjs(_user.created_at).format('D MMMM, YYYY');
+    const acronyms = await queryDb(`SELECT * FROM akronyms WHERE author_id = ${userId} ORDER BY acronym ASC`);
+    const acronymCount = acronyms.length;
+    res.render('view-profile', {_user, acronyms, loggedin: req.session.userId, acronymCount});
+})
 
 app.listen(port, () => {console.log('Server started at port', port);});

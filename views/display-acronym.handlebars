@@ -3,7 +3,7 @@
     {{#if result.length}}
       {{#each result}}
        <div class="display-acronym-title"> 
-          {{this.acronym}} in {{this.subject_area}} - <a href="/profile" style="font-size: 15px;"> {{this.firstname}}
+          {{this.acronym}} in {{this.subject_area}} - <a href="/profile/{{this.author_id}}" style="font-size: 15px;"> {{this.firstname}}
           </a>
         </div>
         <div class="display-content">
@@ -18,7 +18,7 @@
         <div class="comment">Comments</div>
         {{#with comments as |comment|}}
           {{#each comment}}
-            <p class="display-content">{{this.comment}} - <a href="#" style="font-size: 12px;">{{this.firstname}}</a></p>
+            <p class="display-content">{{this.comment}} - <a href="/profile/{{this.author_id}}" style="font-size: 12px;">{{this.firstname}}</a></p>
           {{/each}}
         {{/with}}
       {{/if}}
