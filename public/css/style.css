@@ -212,6 +212,12 @@ ul li, li {
     align-items: center;
     cursor: pointer;
 }
+#account-section {
+    color: grey;
+}
+#account-section p span {
+    color: black;
+}
 #edit-profile-section input{
     border-radius: 5px;
     outline-style: none;
