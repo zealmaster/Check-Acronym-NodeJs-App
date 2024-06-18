@@ -310,6 +310,17 @@ ul li, li {
     color: blue;
 }
 
+.index-acronym {
+    color: grey;
+    font-weight: 400;
+}
+.index-acronym p a span {
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+
+}
+
 
 @media screen and (max-width: 450px) {
     .site-title {

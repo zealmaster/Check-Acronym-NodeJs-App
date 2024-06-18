@@ -1,12 +1,10 @@
 <main class="index">
-    <div class="">
-        <div class="">  
+        <section class="index-acronym">  
             {{#with searchResult as |search|}}
             {{#each search}}
-            <p><a href="/acronym/{{this.id}}"> {{this.acronym}} in {{this.subject_area}}</a></p>
+            <p><a href="/acronym/{{this.id}}"> <span>{{this.acronym}}</span> in {{this.subject_area}}</a></p>
             {{/each}}
             {{/with}}
             <br>
-        </div>
-    </div>
+        </section>
 </main>
