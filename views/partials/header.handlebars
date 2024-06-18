@@ -117,7 +117,7 @@
                 hamburgerMenu.style.display ='flex';
                 hamburgerMenu.style.flexDirection = 'column';
                 hamburgerMenu.style.gap = '30px';
-                hamburgerMenu.style.height = '115vh';
+                hamburgerMenu.style.height = '120vh';
                 hamburgerMenu.style.backgroundColor = '#c8e3db';
                 hamburgerMenu.style.width = '100%';
                 hamburgerMenu.style.zIndex = '99';
@@ -129,7 +129,7 @@
         function hideSideMenu() {
             hamburgerMenu.style.display = 'none';
             closeMenu.style.display = 'none';
-            siteTitle.style.display = 'block';
+            siteTitle.style.display = 'flex';
         }
         // Hide the menu if screen size is greater than 450px
         window.addEventListener('resize', () => {
