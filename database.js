@@ -7,10 +7,10 @@ const options = {
   port: process.env.MYSQL_PORT,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
-  multipleStatements: true
-}; 
+  multipleStatements: true,
+};
 
-export let db = await mysql2.createConnection(options); 
+export let db = await mysql2.createConnection(options);
 
 export async function initializeDatabase() {
   const createDbSql = `
@@ -18,16 +18,20 @@ export async function initializeDatabase() {
   `;
   try {
     await db.query(createDbSql);
-    console.log('Database created or already exists');
+    console.log("Database created or already exists");
   } catch (error) {
-    console.error('Error creating database:', error);
+    console.error("Error creating database:", error);
     return;
   }
 
   // Reconnect with the database specified
   options.database = process.env.MYSQL_DB;
   db = await mysql2.createConnection(options);
-
+  const createUser = `CREATE USER IF NOT EXISTS '${process.env.MYSQL_USER}'@'%' IDENTIFIED BY '${process.env.MYSQL_PASSWORD}';
+  GRANT ALL PRIVILEGES ON ${process.env.MYSQL_DB}.* TO '${process.env.MYSQL_USER}'@'%';
+  FLUSH PRIVILEGES;
+  `;
+  db.query(createUser);
   const createTablesSql = `
   CREATE TABLE IF NOT EXISTS users (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -70,18 +74,18 @@ export async function initializeDatabase() {
   INSERT INTO akronyms (acronym, meaning, definition, subject_area, author_id) 
   VALUES ('KI', 'Kingsley Ijuo', 'The nickname of Kingsley Ijuo Onah', 'General', 1)
   ON DUPLICATE KEY UPDATE id=id;
-`; 
+`;
 
-try {
-  await db.query(createTablesSql);
-  console.log('Database initialized successfully');
-} catch (error) {
-  console.error('Error initializing database:', error);
-}
+  try {
+    await db.query(createTablesSql);
+    console.log("Database initialized successfully");
+  } catch (error) {
+    console.error("Error initializing database:", error);
+  }
 }
 
 // Query function
 export const queryDb = async (sql) => {
   const [result] = await db.query(sql);
-  return result
-  }
+  return result;
+};
